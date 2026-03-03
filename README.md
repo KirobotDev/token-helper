@@ -1,4 +1,4 @@
-<img src="./src/assets/logo.png" />
+<img src="./src/assets/icon.ico" />
 
 # Token Helper
 
