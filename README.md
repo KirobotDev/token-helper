@@ -37,4 +37,4 @@ Token Helper is a powerful tool for managing your Discord tokens. It allows you 
 # for more information contact a8ke on discord
 
 
-# t o k e n - h e l p e r 
+# t o k e n - h e l p e r
