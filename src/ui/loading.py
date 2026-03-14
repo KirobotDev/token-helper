@@ -18,8 +18,8 @@ class LoadingScreen(ctk.CTkToplevel):
         self.update_idletasks()
         sw = self.winfo_screenwidth()
         sh = self.winfo_screenheight()
-        x = (sw - 620) // 2
-        y = (sh - 380) // 2
+        x = (sw - 620) 
+        y = (sh - 380) 
         self.geometry(f"620x380+{x}+{y}")
 
         self.configure(fg_color="#f7fbff")
@@ -91,7 +91,6 @@ class LoadingScreen(ctk.CTkToplevel):
         self._dot_canvas.place(x=295, y=310)
 
     def _draw_bg(self):
-        """Draw subtle radial gradient blobs."""
         c = self.canvas
         for r in range(120, 0, -10):
             alpha_hex = format(int(r / 120 * 30), '02x')
@@ -142,7 +141,6 @@ class LoadingScreen(ctk.CTkToplevel):
             self.after(400, self._finish)
 
     def _finish(self):
-        """Fade out and call callback."""
         self._fade_out(1.0)
 
     def _fade_out(self, alpha):
@@ -157,7 +155,6 @@ class LoadingScreen(ctk.CTkToplevel):
             self.on_done_callback()
 
     def update_progress(self, status_text: str, progress: float):
-        """Called from scanner thread to update progress."""
         self._target_progress = min(progress, 0.94)
         try:
             self.status_label.configure(text=status_text)
@@ -165,5 +162,4 @@ class LoadingScreen(ctk.CTkToplevel):
             pass
 
     def finish_scan(self):
-        """Call when scan is complete to animate to 100%."""
         self._target_progress = 1.0
