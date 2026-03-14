@@ -1,7 +1,3 @@
-"""
-Token Helper — Entry point.
-"""
-
 import sys
 import os
 import threading
